@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phylo-agent
+  namespace: tenant-globex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phylo-agent
+  template:
+    metadata:
+      labels:
+        app: phylo-agent
+    spec:
+      containers:
+      - name: phylo-agent
+        image: phylo-agent:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AGENT_ID
+          value: "globex-agent-01"
+        - name: TENANT_ID
+          value: "tenant-globex"
+        - name: PHYLOD_URL
+          value: "http://phylod.phylo-system.svc:8000"
+        - name: AUTO_UPGRADE
+          value: "false"
+        - name: SYNC_INTERVAL
+          value: "10"

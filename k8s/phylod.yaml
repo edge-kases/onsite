@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phylod
+  namespace: phylo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phylod
+  template:
+    metadata:
+      labels:
+        app: phylod
+    spec:
+      containers:
+      - name: phylod
+        image: phylod:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://phylo:phylo@postgres.phylo-system.svc:5432/phylo"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phylod
+  namespace: phylo-system
+spec:
+  selector:
+    app: phylod
+  ports:
+  - port: 8000
+    targetPort: 8000
